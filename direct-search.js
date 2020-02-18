@@ -28,25 +28,42 @@ let DirectSearch = class DirectSearch extends LitElement {
     constructor() {
         super(...arguments);
         /**
-         * The name to say "Hello" to.
+         * The hideLocation attribute to hide the location from being used
          */
         this.hideLocation = false;
-        this.url = 'https://cxstaging.getdirect.io/listings/search/';
-        this.numberOfGuests = 1;
-        this.startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`;
-        this.endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`;
         /**
-         * The number of times the button has been clicked.
+         * The url for the white label site
          */
-        this.count = 0;
+        this.url = 'https://cxstaging.getdirect.io/listings/search/';
+        /**
+         * The value to override for the number of guests. Will default to 1
+         */
+        this.numberOfGuests = 1;
+        /**
+         * The value for the startDate.  Will default to today's date.
+         */
+        this.startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`;
+        /**
+         * The vaue for the endDate.  Will default to tomorrow's date.
+         */
+        this.endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`;
+        this.locations = [];
     }
     render() {
         return html `
       <form action="${this.url}">
-        <section .hidden="${this.hideLocation}" focus>
-          <label for="loc">Location</label>
-          <slot name="location"></slot>
-        </section>
+        ${this.locations.length > 0
+            ? html `
+              <section>
+                <label for="loc">Location</label>
+                <select id="location" name="loc" slot="location" tabindex="1">
+                  ${this.locations.map(location => html `
+                        <option value="${location.value}">${location.name}</option>
+                      `)}
+                </select>
+              </section>
+            `
+            : ``}
         <section>
           <label for="startDate">Check-In</label>
           <input id="startDate" name="check-in" required type="date" value="${this.startDate}" tabindex="2" />
@@ -63,17 +80,7 @@ let DirectSearch = class DirectSearch extends LitElement {
           <button type="submit" tabindex="5">Search Listings</button>
         </section>
       </form>
-
-      <!-- <button @click=${this._onClick} part="button">
-        Click Count: ${this.count}
-      </button> -->
     `;
-    }
-    _onClick() {
-        this.count++;
-    }
-    foo() {
-        return 'foo';
     }
     pad(n) {
         return n < 10 ? '0' + n : n;
@@ -165,23 +172,23 @@ DirectSearch.styles = css `
     }
   `;
 __decorate([
-    property({ type: Boolean })
+    property({ type: Boolean, reflect: true })
 ], DirectSearch.prototype, "hideLocation", void 0);
 __decorate([
-    property({ type: String })
+    property({ type: String, reflect: true })
 ], DirectSearch.prototype, "url", void 0);
 __decorate([
-    property({ type: Number })
+    property({ type: Number, reflect: true })
 ], DirectSearch.prototype, "numberOfGuests", void 0);
 __decorate([
-    property({ type: String })
+    property({ type: String, reflect: true })
 ], DirectSearch.prototype, "startDate", void 0);
 __decorate([
-    property({ type: String })
+    property({ type: String, reflect: true })
 ], DirectSearch.prototype, "endDate", void 0);
 __decorate([
-    property({ type: Number })
-], DirectSearch.prototype, "count", void 0);
+    property({ type: Array })
+], DirectSearch.prototype, "locations", void 0);
 DirectSearch = __decorate([
     customElement('direct-search')
 ], DirectSearch);

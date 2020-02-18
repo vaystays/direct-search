@@ -1,15 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>&lt;my-element> Demo</title>
     <script type="module" src="../direct-search.js"></script>
     <style>
-
-      html, select {
+      html,
+      select {
         font-size: 16px;
-      font-family: sans-serif;
+        font-family: sans-serif;
       }
 
       p {
@@ -44,12 +44,14 @@
     </style>
   </head>
   <body>
-    <direct-search>
-      <select id="location" name="loc" slot="location" required tabindex="1">
-        <option value="25.790654,-80.1300455">San Jose</option>
-        <option value="53.270668,-9.0567905">Galaway</option>
-        <option value="25.790654,-80.1300455">Miami Beach</option>
-      </select>
+    <direct-search
+      locations='[
+      { "name": "San Jose", "value": "25.790654,-80.1300455"},
+      { "name": "Galaway", "value": "53.270668,-9.0567905"},
+      { "name": "Tyler Beach", "value": "25.790654,-80.1300455"}
+    ]'
+    >
     </direct-search>
+    <!-- <direct-search> </direct-search> -->
   </body>
 </html>

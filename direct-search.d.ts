@@ -21,20 +21,27 @@ import { LitElement } from 'lit-element';
 export declare class DirectSearch extends LitElement {
     static styles: import("lit-element").CSSResult;
     /**
-     * The name to say "Hello" to.
+     * The hideLocation attribute to hide the location from being used
      */
     hideLocation: boolean;
-    url: string;
-    numberOfGuests: number;
-    startDate: string;
-    endDate: string;
     /**
-     * The number of times the button has been clicked.
+     * The url for the white label site
      */
-    count: number;
+    url: string;
+    /**
+     * The value to override for the number of guests. Will default to 1
+     */
+    numberOfGuests: number;
+    /**
+     * The value for the startDate.  Will default to today's date.
+     */
+    startDate: string;
+    /**
+     * The vaue for the endDate.  Will default to tomorrow's date.
+     */
+    endDate: string;
+    locations: never[];
     render(): import("lit-element").TemplateResult;
-    private _onClick;
-    foo(): string;
     pad(n: any): any;
 }
 declare global {

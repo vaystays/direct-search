@@ -111,40 +111,54 @@ export class DirectSearch extends LitElement {
   /**
    * The hideLocation attribute to hide the location from being used
    */
-  @property({ type: Boolean })
+  @property({ type: Boolean, reflect: true })
   hideLocation = false
 
   /**
    * The url for the white label site
    */
-  @property({ type: String })
+  @property({ type: String, reflect: true })
   url = 'https://cxstaging.getdirect.io/listings/search/'
 
   /**
    * The value to override for the number of guests. Will default to 1
    */
-  @property({ type: Number })
+  @property({ type: Number, reflect: true })
   numberOfGuests = 1
 
   /**
    * The value for the startDate.  Will default to today's date.
    */
-  @property({ type: String })
+  @property({ type: String, reflect: true })
   startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`
 
   /**
    * The vaue for the endDate.  Will default to tomorrow's date.
    */
-  @property({ type: String })
+  @property({ type: String, reflect: true })
   endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
+
+  @property({ type: Array })
+  locations = []
 
   render() {
     return html`
       <form action="${this.url}">
-        <section .hidden="${this.hideLocation}" focus>
-          <label for="loc">Location</label>
-          <slot name="location"></slot>
-        </section>
+        ${this.locations.length > 0
+          ? html`
+              <section>
+                <label for="loc">Location</label>
+                <select id="location" name="loc" slot="location" tabindex="1">
+                  ${this.locations.map(
+                    location =>
+                      html`
+                        <option value="${location.value}">${location.name}</option>
+                      `,
+                  )}
+                </select>
+              </section>
+            `
+          : ``}
         <section>
           <label for="startDate">Check-In</label>
           <input id="startDate" name="check-in" required type="date" value="${this.startDate}" tabindex="2" />
