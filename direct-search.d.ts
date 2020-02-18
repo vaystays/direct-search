@@ -21,10 +21,6 @@ import { LitElement } from 'lit-element';
 export declare class DirectSearch extends LitElement {
     static styles: import("lit-element").CSSResult;
     /**
-     * The hideLocation attribute to hide the location from being used
-     */
-    hideLocation: boolean;
-    /**
      * The url for the white label site
      */
     url: string;
@@ -41,7 +37,10 @@ export declare class DirectSearch extends LitElement {
      */
     endDate: string;
     locations: never[];
+    selectedLocation: string;
     render(): import("lit-element").TemplateResult;
+    handleLocationChange(e: any): void;
+    handleFormSubmit(e: any): void;
     pad(n: any): any;
 }
 declare global {

@@ -28,10 +28,6 @@ let DirectSearch = class DirectSearch extends LitElement {
     constructor() {
         super(...arguments);
         /**
-         * The hideLocation attribute to hide the location from being used
-         */
-        this.hideLocation = false;
-        /**
          * The url for the white label site
          */
         this.url = 'https://cxstaging.getdirect.io/listings/search/';
@@ -48,15 +44,17 @@ let DirectSearch = class DirectSearch extends LitElement {
          */
         this.endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`;
         this.locations = [];
+        this.selectedLocation = '';
     }
     render() {
         return html `
-      <form action="${this.url}">
+      <form action="${this.url}" @submit="${this.handleFormSubmit}">
         ${this.locations.length > 0
             ? html `
               <section>
                 <label for="loc">Location</label>
-                <select id="location" name="loc" slot="location" tabindex="1">
+                <select id="location" name="loc" slot="location" tabindex="1" @change="${this.handleLocationChange}">
+                  <option value="">Select a Location</option>
                   ${this.locations.map(({ value, name }) => html `
                         <option value="${value}">${name}</option>
                       `)}
@@ -81,6 +79,19 @@ let DirectSearch = class DirectSearch extends LitElement {
         </section>
       </form>
     `;
+    }
+    handleLocationChange(e) {
+        this.selectedLocation = e.currentTarget.value;
+    }
+    handleFormSubmit(e) {
+        e.preventDefault();
+        const startDate = new Date(this.startDate);
+        const endDate = new Date(this.endDate);
+        let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${startDate.getDate()}-${startDate.getMonth() +
+            1}-${startDate.getFullYear()}&check-out=${endDate.getDate()}-${endDate.getMonth() + 1}-${endDate.getFullYear()}`;
+        if (this.selectedLocation)
+            toUrl = `${toUrl}&loc=${this.selectedLocation}`;
+        window.location.href = toUrl;
     }
     pad(n) {
         return n < 10 ? '0' + n : n;
@@ -172,9 +183,6 @@ DirectSearch.styles = css `
     }
   `;
 __decorate([
-    property({ type: Boolean, reflect: true })
-], DirectSearch.prototype, "hideLocation", void 0);
-__decorate([
     property({ type: String, reflect: true })
 ], DirectSearch.prototype, "url", void 0);
 __decorate([
@@ -189,6 +197,9 @@ __decorate([
 __decorate([
     property({ type: Array })
 ], DirectSearch.prototype, "locations", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], DirectSearch.prototype, "selectedLocation", void 0);
 DirectSearch = __decorate([
     customElement('direct-search')
 ], DirectSearch);

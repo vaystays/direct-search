@@ -109,12 +109,6 @@ export class DirectSearch extends LitElement {
   `
 
   /**
-   * The hideLocation attribute to hide the location from being used
-   */
-  @property({ type: Boolean, reflect: true })
-  hideLocation = false
-
-  /**
    * The url for the white label site
    */
   @property({ type: String, reflect: true })
@@ -141,14 +135,18 @@ export class DirectSearch extends LitElement {
   @property({ type: Array })
   locations = []
 
+  @property({ type: String, reflect: true })
+  selectedLocation = ''
+
   render() {
     return html`
-      <form action="${this.url}">
+      <form action="${this.url}" @submit="${this.handleFormSubmit}">
         ${this.locations.length > 0
           ? html`
               <section>
                 <label for="loc">Location</label>
-                <select id="location" name="loc" slot="location" tabindex="1">
+                <select id="location" name="loc" slot="location" tabindex="1" @change="${this.handleLocationChange}">
+                  <option value="">Select a Location</option>
                   ${this.locations.map(
                     ({ value, name }) =>
                       html`
@@ -176,6 +174,24 @@ export class DirectSearch extends LitElement {
         </section>
       </form>
     `
+  }
+
+  handleLocationChange(e) {
+    this.selectedLocation = e.currentTarget.value
+  }
+
+  handleFormSubmit(e) {
+    e.preventDefault()
+
+    const startDate = new Date(this.startDate)
+    const endDate = new Date(this.endDate)
+
+    let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${startDate.getDate()}-${startDate.getMonth() +
+      1}-${startDate.getFullYear()}&check-out=${endDate.getDate()}-${endDate.getMonth() + 1}-${endDate.getFullYear()}`
+
+    if (this.selectedLocation) toUrl = `${toUrl}&loc=${this.selectedLocation}`
+
+    window.location.href = toUrl
   }
 
   pad(n: any) {
