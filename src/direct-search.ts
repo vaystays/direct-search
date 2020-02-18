@@ -109,28 +109,34 @@ export class DirectSearch extends LitElement {
   `
 
   /**
-   * The name to say "Hello" to.
+   * The hideLocation attribute to hide the location from being used
    */
   @property({ type: Boolean })
   hideLocation = false
 
+  /**
+   * The url for the white label site
+   */
   @property({ type: String })
   url = 'https://cxstaging.getdirect.io/listings/search/'
 
+  /**
+   * The value to override for the number of guests. Will default to 1
+   */
   @property({ type: Number })
   numberOfGuests = 1
 
+  /**
+   * The value for the startDate.  Will default to today's date.
+   */
   @property({ type: String })
   startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`
 
+  /**
+   * The vaue for the endDate.  Will default to tomorrow's date.
+   */
   @property({ type: String })
   endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
-
-  /**
-   * The number of times the button has been clicked.
-   */
-  @property({ type: Number })
-  count = 0
 
   render() {
     return html`
@@ -155,10 +161,6 @@ export class DirectSearch extends LitElement {
           <button type="submit" tabindex="5">Search Listings</button>
         </section>
       </form>
-
-      <!-- <button @click=${this._onClick} part="button">
-        Click Count: ${this.count}
-      </button> -->
     `
   }
 
