@@ -162,14 +162,6 @@ export class DirectSearch extends LitElement {
     `
   }
 
-  private _onClick() {
-    this.count++
-  }
-
-  foo(): string {
-    return 'foo'
-  }
-
   pad(n) {
     return n < 10 ? '0' + n : n
   }
