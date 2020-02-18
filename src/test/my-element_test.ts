@@ -1,4 +1,4 @@
-import {MyElement} from '../my-element.js';
+import {DirectSearch} from '../direct-search.js';
 import {fixture, html} from '@open-wc/testing';
 
 const assert = chai.assert;
@@ -7,7 +7,7 @@ suite('my-element', () => {
 
   test('is defined', () => {
     const el = document.createElement('my-element');
-    assert.instanceOf(el, MyElement);
+    assert.instanceOf(el, DirectSearch);
   });
 
   test('renders with default values', async () => {
@@ -29,7 +29,7 @@ suite('my-element', () => {
   });
 
   test('handles a click', async () => {
-    const el = await fixture(html`<my-element></my-element>`) as MyElement;
+    const el = await fixture(html`<my-element></my-element>`) as DirectSearch;
     const button = el.shadowRoot!.querySelector('button')!;
     button.click();
     await el.updateComplete;
