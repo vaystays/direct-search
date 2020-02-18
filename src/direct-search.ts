@@ -150,9 +150,9 @@ export class DirectSearch extends LitElement {
                 <label for="loc">Location</label>
                 <select id="location" name="loc" slot="location" tabindex="1">
                   ${this.locations.map(
-                    location =>
+                    ({ value, name }) =>
                       html`
-                        <option value="${location.value}">${location.name}</option>
+                        <option value="${value}">${name}</option>
                       `,
                   )}
                 </select>
@@ -178,7 +178,7 @@ export class DirectSearch extends LitElement {
     `
   }
 
-  pad(n) {
+  pad(n: any) {
     return n < 10 ? '0' + n : n
   }
 }
