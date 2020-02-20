@@ -2,8 +2,8 @@
   "version": "experimental",
   "tags": [
     {
-      "name": "my-element",
-      "description": "An example element.",
+      "name": "direct-search",
+      "description": "A search widget",
       "attributes": [
         {
           "name": "name",
@@ -32,12 +32,6 @@
           "description": "The number of times the button has been clicked.",
           "type": "number",
           "default": "0"
-        }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "This element has a slot"
         }
       ],
       "cssParts": [

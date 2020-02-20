@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>&lt;my-element> Demo</title>
+    <title>Direct Search Demo</title>
     <script type="module" src="../direct-search.js"></script>
     <style>
       html,
@@ -20,7 +20,7 @@
       select {
         display: block;
 
-        font-weight: 700;
+        /* font-weight: 700;
         color: #444;
         line-height: 1.3;
         padding: 0.6em 1.4em 0.5em 0.8em;
@@ -39,19 +39,26 @@
           linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
         background-repeat: no-repeat, repeat;
         background-position: right 0.7em top 50%, 0 0;
-        background-size: 0.65em auto, 100%;
+        background-size: 0.65em auto, 100%; */
       }
+
+      direct-search {
+      }
+
     </style>
   </head>
   <body>
     <direct-search
+      
+      url="https://cxstaging.getdirect.io/listings/search"
       locations='[
       { "name": "San Jose", "value": "25.790654,-80.1300455"},
       { "name": "Galaway", "value": "53.270668,-9.0567905"},
-      { "name": "Tyler Beach", "value": "25.790654,-80.1300455"}
+      { "name": "Blah", "value": "25.790654,-80.1300455"}
     ]'
     >
     </direct-search>
+    <!-- buttonCSS="background: #FFCC00; border: 0;" -->
     <!-- <direct-search> </direct-search> -->
   </body>
 </html>

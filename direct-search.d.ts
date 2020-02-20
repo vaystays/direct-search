@@ -38,8 +38,14 @@ export declare class DirectSearch extends LitElement {
     endDate: string;
     locations: never[];
     selectedLocation: string;
+    bedrooms: number;
+    buttonCss: string;
     render(): import("lit-element").TemplateResult;
     handleLocationChange(e: any): void;
+    handleGuestsChange(e: any): void;
+    handleBedsChange(e: any): void;
+    handleStartDateChanged(e: any): void;
+    handleEndDateChanged(e: any): void;
     handleFormSubmit(e: any): void;
     pad(n: any): any;
 }

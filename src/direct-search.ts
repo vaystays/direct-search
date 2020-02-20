@@ -28,7 +28,7 @@ export class DirectSearch extends LitElement {
       flex-direction: column;
       padding: 16px;
       margin: 16px;
-      box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.4);
+      box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.2);
       border-radius: 3px;
     }
 
@@ -37,7 +37,7 @@ export class DirectSearch extends LitElement {
     input,
     section,
     button {
-      font-size: 16px;
+      font-size: 14px;
       font-family: sans-serif;
     }
 
@@ -49,28 +49,25 @@ export class DirectSearch extends LitElement {
     label {
       font-weight: 600;
       padding: 6px 0px 3px 0px;
+      text-transform: uppercase;
+      color: #9da8ad;
     }
 
-    select,
     input,
-    slot {
-      padding: 6px;
-      font-size: 16px;
-    }
-
-    input {
-      border: 1px solid #666;
+    select,
+    option {
+      border: 1px solid #cdd3d5;
+      border-radius: 6px;
+      color: #1c2131;
+      padding: 0.6em 1.4em 0.5em 0.8em;
     }
 
     select {
       display: block;
 
-      font-weight: 700;
-      color: #444;
       line-height: 1.3;
       padding: 0.6em 1.4em 0.5em 0.8em;
-      width: 100%;
-      max-width: 100%;
+
       box-sizing: border-box;
       margin: 0;
       border: 1px solid #aaa;
@@ -80,8 +77,8 @@ export class DirectSearch extends LitElement {
       -webkit-appearance: none;
       appearance: none;
       background-color: #fff;
-      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-        linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
+      /* background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+        linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%); */
       background-repeat: no-repeat, repeat;
       background-position: right 0.7em top 50%, 0 0;
       background-size: 0.65em auto, 100%;
@@ -125,18 +122,26 @@ export class DirectSearch extends LitElement {
    */
   @property({ type: String, reflect: true })
   startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`
+  // startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`
 
   /**
    * The vaue for the endDate.  Will default to tomorrow's date.
    */
   @property({ type: String, reflect: true })
   endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
+  // endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
 
   @property({ type: Array })
   locations = []
 
   @property({ type: String, reflect: true })
   selectedLocation = ''
+
+  @property({ type: Number, reflect: true })
+  bedrooms = 1
+
+  @property({ type: String, reflect: true })
+  buttonCss = ''
 
   render() {
     return html`
@@ -159,18 +164,72 @@ export class DirectSearch extends LitElement {
           : ``}
         <section>
           <label for="startDate">Check-In</label>
-          <input id="startDate" name="check-in" required type="date" value="${this.startDate}" tabindex="2" />
+          <input id="startDate" name="check-in" required type="date" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" />
         </section>
         <section>
           <label for="endDate">Check-Out</label>
-          <input id="startDate" name="check-out" required type="date" value="${this.endDate}" tabindex="3" />
+          <input id="startDate" name="check-out" required type="date" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" />
         </section>
         <section>
           <label for="numberOfGuests">Guests</label>
-          <input id="numberOfGuests" name="guests" required type="number" min="1" max="100" value="${this.numberOfGuests}" tabindex="4" />
+          <select name="guests" id="numberOfGuests" @change="${this.handleGuestsChange}" tabindex="4">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+          </select>
         </section>
         <section>
-          <button type="submit" tabindex="5">Search Listings</button>
+          <label for="beds">Beds</label>
+          <select name="beds" id="beds" @change="${this.handleBedsChange}" tabindex="5">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+          </select>
+        </section>
+        <section>
+          <button type="submit" tabindex="6" .style="${this.buttonCss}">Search Listings</button>
         </section>
       </form>
     `
@@ -180,16 +239,32 @@ export class DirectSearch extends LitElement {
     this.selectedLocation = e.currentTarget.value
   }
 
+  handleGuestsChange(e) {
+    this.numberOfGuests = e.currentTarget.value
+  }
+
+  handleBedsChange(e) {
+    this.bedrooms = e.currentTarget.value
+  }
+
+  handleStartDateChanged(e) {
+    this.startDate = e.currentTarget.value
+  }
+  handleEndDateChanged(e) {
+    this.endDate = e.currentTarget.value
+  }
+
   handleFormSubmit(e) {
     e.preventDefault()
 
-    const startDate = new Date(this.startDate)
-    const endDate = new Date(this.endDate)
+    const startDatePieces = this.startDate.toString().split('-')
+    const endDatePieces = this.endDate.toString().split('-')
 
-    let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${startDate.getDate()}-${startDate.getMonth() +
-      1}-${startDate.getFullYear()}&check-out=${endDate.getDate()}-${endDate.getMonth() + 1}-${endDate.getFullYear()}`
+    let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${startDatePieces[2]}-${startDatePieces[1]}-${startDatePieces[0]}&check-out=${endDatePieces[2]}-${endDatePieces[1]}-${endDatePieces[0]}`
 
-    if (this.selectedLocation) toUrl = `${toUrl}&loc=${this.selectedLocation}`
+    if (this.selectedLocation) {
+      toUrl = `${toUrl}&loc=${this.selectedLocation}`
+    }
 
     window.location.href = toUrl
   }
