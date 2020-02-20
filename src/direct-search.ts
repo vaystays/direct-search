@@ -28,7 +28,6 @@ export class DirectSearch extends LitElement {
       display: flex;
       flex-direction: column;
       padding: 16px;
-      margin: 16px;
     }
 
     label,
@@ -154,6 +153,22 @@ export class DirectSearch extends LitElement {
 
   render() {
     return html`
+    <dom-module id="custom-input-field-style" theme-for="vaadin-text-field">
+      <template>
+        <style>
+          :host([theme~="custom-input-field-style"]) [part="input-field"] {
+            border: 1px solid #cdd3d5;
+            background-color: white;
+            display: flex;
+            width: 130px;
+          }
+
+          :host([theme~="custom-input-field-style"]) [part="vaadin-text-field-container"] {
+            display: flex;
+          }
+        </style>
+      </template>
+    </dom-module>
       <form action="${this.url}" @submit="${this.handleFormSubmit}">
         ${this.locations.length > 0
           ? html`
@@ -174,11 +189,11 @@ export class DirectSearch extends LitElement {
         <div row>
           <section>
             <label for="startDate">Check-In</label>
-            <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}"></vaadin-date-picker>
+            <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" theme="custom-input-field-style"></vaadin-date-picker>
           </section>
           <section>
             <label for="endDate">Check-Out</label>
-            <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}"></vaadin-date-picker>
+            <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" theme="custom-input-field-style"></vaadin-date-picker>
           </section>
         </div>
         <div row>

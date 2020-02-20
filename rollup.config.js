@@ -34,11 +34,11 @@ export default {
     terser({
       module: true,
       warnings: true,
-      mangle: {
-        properties: {
-          regex: /^__/,
-        },
-      },
+      // mangle: {
+      //   properties: {
+      //     regex: /^__/,
+      //   },
+      // },
     }),
     filesize({
       showBrotliSize: true,
