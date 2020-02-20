@@ -1,13 +1,15 @@
 {
   "name": "@direct-software/direct-search",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Direct Softwares Search Web Component",
   "main": "direct-search.js",
   "module": "direct-search.js",
+  "private": false,
   "type": "module",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
+    "build:rollup": "rollup -c",
     "lint": "lit-analyzer && eslint 'src/**/*.ts'",
     "format": "prettier src/* --write",
     "docs": "npm run build && npm run analyze && npm run docs:build && npm run docs:assets && npm run docs:gen",
@@ -22,7 +24,8 @@
     "test:watch": "karma start karma.conf.cjs --auto-watch=true --single-run=false",
     "test:update-snapshots": "karma start karma.conf.cjs --update-snapshots",
     "test:prune-snapshots": "karma start karma.conf.cjs --prune-snapshots",
-    "checksize": "rollup -c ; cat direct-search.bundled.js | gzip -9 | wc -c ; rm direct-search.bundled.js"
+    "checksize": "rollup -c ; cat direct-search.bundled.js | gzip -9 | wc -c ; rm direct-search.bundled.js",
+    "publish:npm": "npm publish --access public"
   },
   "keywords": [
     "web component",
@@ -33,6 +36,9 @@
   ],
   "author": "Tyler Garlick <tyler@directsoftware.com>",
   "license": "BSD-3-Clause",
+  "bundledDependencies": [
+    "lit-element"
+  ],
   "dependencies": {
     "lit-element": "^2.2.1"
   },
