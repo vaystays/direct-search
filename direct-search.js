@@ -60,7 +60,7 @@ let DirectSearch = class DirectSearch extends LitElement {
                 <select id="location" name="loc" slot="location" tabindex="1" @change="${this.handleLocationChange}">
                   <option value="">Select a Location</option>
                   ${this.locations.map(({ value, name }) => html `
-                        <option value="${value}">${name}</option>
+                        <option .value="${value}">${name}</option>
                       `)}
                 </select>
               </section>

@@ -17,6 +17,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
     "plugins": [
       {
         "name": "ts-lit-plugin",

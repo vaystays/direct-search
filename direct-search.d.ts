@@ -47,7 +47,7 @@ export declare class DirectSearch extends LitElement {
     handleStartDateChanged(e: any): void;
     handleEndDateChanged(e: any): void;
     handleFormSubmit(e: any): void;
-    pad(n: any): any;
+    pad(n: number): string | number;
 }
 declare global {
     interface HTMLElementTagNameMap {

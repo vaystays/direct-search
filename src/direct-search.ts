@@ -155,7 +155,7 @@ export class DirectSearch extends LitElement {
                   ${this.locations.map(
                     ({ value, name }) =>
                       html`
-                        <option value="${value}">${name}</option>
+                        <option .value="${value}">${name}</option>
                       `,
                   )}
                 </select>
@@ -269,13 +269,13 @@ export class DirectSearch extends LitElement {
     window.location.href = toUrl
   }
 
-  pad(n: any) {
+  pad(n: number) {
     return n < 10 ? '0' + n : n
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'direct-search': DirectSearch
+    'direct-search': DirectSearch;
   }
 }
