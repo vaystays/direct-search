@@ -12,6 +12,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 import { LitElement } from 'lit-element';
+import '@vaadin/vaadin-date-picker';
 /**
  * An example element.
  *

@@ -18,6 +18,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html, customElement, property, css } from 'lit-element';
+import '@vaadin/vaadin-date-picker';
 /**
  * An example element.
  *
@@ -66,72 +67,76 @@ let DirectSearch = class DirectSearch extends LitElement {
               </section>
             `
             : ``}
-        <section>
-          <label for="startDate">Check-In</label>
-          <input id="startDate" name="check-in" required type="date" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" />
-        </section>
-        <section>
-          <label for="endDate">Check-Out</label>
-          <input id="startDate" name="check-out" required type="date" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" />
-        </section>
-        <section>
-          <label for="numberOfGuests">Guests</label>
-          <select name="guests" id="numberOfGuests" @change="${this.handleGuestsChange}" tabindex="4">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-          </select>
-        </section>
-        <section>
-          <label for="beds">Beds</label>
-          <select name="beds" id="beds" @change="${this.handleBedsChange}" tabindex="5">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-          </select>
-        </section>
+        <div row>
+          <section>
+            <label for="startDate">Check-In</label>
+            <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}"></vaadin-date-picker>
+          </section>
+          <section>
+            <label for="endDate">Check-Out</label>
+            <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}"></vaadin-date-picker>
+          </section>
+        </div>
+        <div row>
+          <section>
+            <label for="numberOfGuests">Guests</label>
+            <select name="guests" id="numberOfGuests" @change="${this.handleGuestsChange}" tabindex="4">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+            </select>
+          </section>
+          <section>
+            <label for="beds">Beds</label>
+            <select name="beds" id="beds" @change="${this.handleBedsChange}" tabindex="5">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+            </select>
+          </section>
+        </div>
         <section>
           <button type="submit" tabindex="6" .style="${this.buttonCss}">Search Listings</button>
         </section>
@@ -148,7 +153,14 @@ let DirectSearch = class DirectSearch extends LitElement {
         this.bedrooms = e.currentTarget.value;
     }
     handleStartDateChanged(e) {
+        var _a;
         this.startDate = e.currentTarget.value;
+        const endDateElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.getElementById('endDate');
+        endDateElement.min = e.currentTarget.value;
+        if (this.startDate) {
+            endDateElement.value = e.currentTarget.value;
+            endDateElement.open();
+        }
     }
     handleEndDateChanged(e) {
         this.endDate = e.currentTarget.value;
@@ -173,8 +185,6 @@ DirectSearch.styles = css `
       flex-direction: column;
       padding: 16px;
       margin: 16px;
-      box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
     }
 
     label,
@@ -201,23 +211,22 @@ DirectSearch.styles = css `
     input,
     select,
     option {
+      display: block;
       border: 1px solid #cdd3d5;
-      border-radius: 6px;
+      border-radius: 0.5em;
       color: #1c2131;
+      line-height: 1.3;
       padding: 0.6em 1.4em 0.5em 0.8em;
     }
 
     select {
-      display: block;
-
-      line-height: 1.3;
       padding: 0.6em 1.4em 0.5em 0.8em;
 
       box-sizing: border-box;
       margin: 0;
       border: 1px solid #aaa;
       box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
-      border-radius: 0.5em;
+
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
@@ -247,6 +256,17 @@ DirectSearch.styles = css `
 
     section button {
       margin-top: 15px;
+    }
+
+    [row] {
+      display: flex;
+    }
+    [row] section {
+      display: flex;
+      flex-grow: 1;
+    }
+    [row] section:first-child {
+      margin-right: 16px;
     }
   `;
 __decorate([
