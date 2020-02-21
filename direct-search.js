@@ -74,7 +74,6 @@ let DirectSearch = class DirectSearch extends LitElement {
             value="${this.startDate}"
             tabindex="2"
             @change="${this.handleStartDateChanged}"
-            theme="custom-input-field-style"
           ></vaadin-date-picker>
         </section>
         <section>
@@ -84,7 +83,6 @@ let DirectSearch = class DirectSearch extends LitElement {
             value="${this.endDate}"
             tabindex="3"
             @change="${this.handleEndDateChanged}"
-            theme="custom-input-field-style"
           ></vaadin-date-picker>
         </section>
         <div row>

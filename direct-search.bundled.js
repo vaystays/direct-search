@@ -2258,7 +2258,6 @@ var rr=function(e,t,n,i){for(var o,s=arguments.length,r=s<3?t:null===i?i=Object.
             value="${this.startDate}"
             tabindex="2"
             @change="${this.handleStartDateChanged}"
-            theme="custom-input-field-style"
           ></vaadin-date-picker>
         </section>
         <section>
@@ -2268,7 +2267,6 @@ var rr=function(e,t,n,i){for(var o,s=arguments.length,r=s<3?t:null===i?i=Object.
             value="${this.endDate}"
             tabindex="3"
             @change="${this.handleEndDateChanged}"
-            theme="custom-input-field-style"
           ></vaadin-date-picker>
         </section>
         <div row>
