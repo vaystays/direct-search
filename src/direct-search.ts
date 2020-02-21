@@ -86,10 +86,10 @@ export class DirectSearch extends LitElement {
     }
 
     button {
-      border: 2px solid #666;
+      border: 1px solid #666;
       padding: 12px 24px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 16px;
       text-transform: uppercase;
     }
 
@@ -153,22 +153,6 @@ export class DirectSearch extends LitElement {
 
   render() {
     return html`
-    <dom-module id="custom-input-field-style" theme-for="vaadin-text-field">
-      <template>
-        <style>
-          :host([theme~="custom-input-field-style"]) [part="input-field"] {
-            border: 1px solid #cdd3d5;
-            background-color: white;
-            display: flex;
-            width: 130px;
-          }
-
-          :host([theme~="custom-input-field-style"]) [part="vaadin-text-field-container"] {
-            display: flex;
-          }
-        </style>
-      </template>
-    </dom-module>
       <form action="${this.url}" @submit="${this.handleFormSubmit}">
         ${this.locations.length > 0
           ? html`
@@ -186,16 +170,26 @@ export class DirectSearch extends LitElement {
               </section>
             `
           : ``}
-        <div row>
-          <section>
-            <label for="startDate">Check-In</label>
-            <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" theme="custom-input-field-style"></vaadin-date-picker>
-          </section>
-          <section>
-            <label for="endDate">Check-Out</label>
-            <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" theme="custom-input-field-style"></vaadin-date-picker>
-          </section>
-        </div>
+        <section>
+          <label for="startDate">Check-In</label>
+          <vaadin-date-picker
+            id="startDate"
+            value="${this.startDate}"
+            tabindex="2"
+            @change="${this.handleStartDateChanged}"
+            theme="custom-input-field-style"
+          ></vaadin-date-picker>
+        </section>
+        <section>
+          <label for="endDate">Check-Out</label>
+          <vaadin-date-picker
+            id="endDate"
+            value="${this.endDate}"
+            tabindex="3"
+            @change="${this.handleEndDateChanged}"
+            theme="custom-input-field-style"
+          ></vaadin-date-picker>
+        </section>
         <div row>
           <section>
             <label for="numberOfGuests">Guests</label>

@@ -2346,7 +2346,6 @@ var rr=function(e,t,n,i){for(var o,s=arguments.length,r=s<3?t:null===i?i=Object.
       display: flex;
       flex-direction: column;
       padding: 16px;
-      margin: 16px;
     }
 
     label,
