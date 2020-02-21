@@ -2239,22 +2239,6 @@ This program is available under Apache License Version 2.0, available at https:/
  * http://polymer.github.io/PATENTS.txt
  */
 var rr=function(e,t,n,i){for(var o,s=arguments.length,r=s<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,n):i,a=e.length-1;a>=0;a--)(o=e[a])&&(r=(s<3?o(r):s>3?o(t,n,r):o(t,n))||r);return s>3&&r&&Object.defineProperty(t,n,r),r};let ar=class extends Z{constructor(){super(...arguments),this.url="https://cxstaging.getdirect.io/listings/search/",this.numberOfGuests=1,this.startDate=`${(new Date).getFullYear()}-${this.pad((new Date).getMonth()+1)}-${(new Date).getDate()}`,this.endDate=`${(new Date).getFullYear()}-${this.pad((new Date).getMonth()+1)}-${(new Date).getDate()+1}`,this.locations=[],this.selectedLocation="",this.bedrooms=1,this.buttonCss=""}render(){return I`
-    <dom-module id="custom-input-field-style" theme-for="vaadin-text-field">
-      <template>
-        <style>
-          :host([theme~="custom-input-field-style"]) [part="input-field"] {
-            border: 1px solid #cdd3d5;
-            background-color: white;
-            display: flex;
-            width: 130px;
-          }
-
-          :host([theme~="custom-input-field-style"]) [part="vaadin-text-field-container"] {
-            display: flex;
-          }
-        </style>
-      </template>
-    </dom-module>
       <form action="${this.url}" @submit="${this.handleFormSubmit}">
         ${this.locations.length>0?I`
               <section>
@@ -2267,16 +2251,26 @@ var rr=function(e,t,n,i){for(var o,s=arguments.length,r=s<3?t:null===i?i=Object.
                 </select>
               </section>
             `:""}
-        <div row>
-          <section>
-            <label for="startDate">Check-In</label>
-            <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" theme="custom-input-field-style"></vaadin-date-picker>
-          </section>
-          <section>
-            <label for="endDate">Check-Out</label>
-            <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" theme="custom-input-field-style"></vaadin-date-picker>
-          </section>
-        </div>
+        <section>
+          <label for="startDate">Check-In</label>
+          <vaadin-date-picker
+            id="startDate"
+            value="${this.startDate}"
+            tabindex="2"
+            @change="${this.handleStartDateChanged}"
+            theme="custom-input-field-style"
+          ></vaadin-date-picker>
+        </section>
+        <section>
+          <label for="endDate">Check-Out</label>
+          <vaadin-date-picker
+            id="endDate"
+            value="${this.endDate}"
+            tabindex="3"
+            @change="${this.handleEndDateChanged}"
+            theme="custom-input-field-style"
+          ></vaadin-date-picker>
+        </section>
         <div row>
           <section>
             <label for="numberOfGuests">Guests</label>
@@ -2404,10 +2398,10 @@ var rr=function(e,t,n,i){for(var o,s=arguments.length,r=s<3?t:null===i?i=Object.
     }
 
     button {
-      border: 2px solid #666;
+      border: 1px solid #666;
       padding: 12px 24px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 16px;
       text-transform: uppercase;
     }
 
