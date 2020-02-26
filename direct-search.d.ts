@@ -21,6 +21,7 @@ import '@vaadin/vaadin-date-picker';
  */
 export declare class DirectSearch extends LitElement {
     static styles: import("lit-element").CSSResult;
+    mode: string;
     /**
      * The url for the white label site
      */
@@ -39,8 +40,16 @@ export declare class DirectSearch extends LitElement {
     endDate: string;
     locations: never[];
     selectedLocation: string;
+    maxBedrooms: number;
+    maxGuests: number;
     bedrooms: number;
     buttonCss: string;
+    buttonText: string;
+    labelLocation: string;
+    labelStartDate: string;
+    labelEndDate: string;
+    labelGuests: string;
+    labelBeds: string;
     render(): import("lit-element").TemplateResult;
     handleLocationChange(e: any): void;
     handleGuestsChange(e: any): void;

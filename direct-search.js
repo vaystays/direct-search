@@ -28,6 +28,7 @@ import '@vaadin/vaadin-date-picker';
 let DirectSearch = class DirectSearch extends LitElement {
     constructor() {
         super(...arguments);
+        this.mode = 'default'; // default|property
         /**
          * The url for the white label site
          */
@@ -48,8 +49,16 @@ let DirectSearch = class DirectSearch extends LitElement {
         // endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
         this.locations = [];
         this.selectedLocation = '';
+        this.maxBedrooms = 10;
+        this.maxGuests = 10;
         this.bedrooms = 1;
         this.buttonCss = '';
+        this.buttonText = 'Search Listings';
+        this.labelLocation = 'Location';
+        this.labelStartDate = 'Check-In';
+        this.labelEndDate = 'Check-Out';
+        this.labelGuests = 'Guests';
+        this.labelBeds = 'Beds';
     }
     render() {
         return html `
@@ -57,7 +66,7 @@ let DirectSearch = class DirectSearch extends LitElement {
         ${this.locations.length > 0
             ? html `
               <section>
-                <label for="loc">Location</label>
+                <label for="loc">${this.labelLocation}</label>
                 <select id="location" name="loc" slot="location" tabindex="1" @change="${this.handleLocationChange}">
                   <option value="">Select a Location</option>
                   ${this.locations.map(({ value, name }) => html `
@@ -68,85 +77,33 @@ let DirectSearch = class DirectSearch extends LitElement {
             `
             : ``}
         <section>
-          <label for="startDate">Check-In</label>
-          <vaadin-date-picker
-            id="startDate"
-            value="${this.startDate}"
-            tabindex="2"
-            @change="${this.handleStartDateChanged}"
-          ></vaadin-date-picker>
+          <label for="startDate">${this.labelStartDate}</label>
+          <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" placeholder="${this.labelStartDate}"></vaadin-date-picker>
         </section>
         <section>
-          <label for="endDate">Check-Out</label>
-          <vaadin-date-picker
-            id="endDate"
-            value="${this.endDate}"
-            tabindex="3"
-            @change="${this.handleEndDateChanged}"
-          ></vaadin-date-picker>
+          <label for="endDate">${this.labelEndDate}</label>
+          <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" placeholder="${this.labelEndDate}"></vaadin-date-picker>
         </section>
         <div row>
           <section>
-            <label for="numberOfGuests">Guests</label>
+            <label for="numberOfGuests">${this.labelGuests}</label>
             <select name="guests" id="numberOfGuests" @change="${this.handleGuestsChange}" tabindex="4">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
+              ${Array.from({ length: this.maxGuests }, (_, k) => k + 1).map(i => html `
+                    <option value="${i}">${i}</option>
+                  `)}
             </select>
           </section>
           <section>
-            <label for="beds">Beds</label>
+            <label for="beds">${this.labelBeds}</label>
             <select name="beds" id="beds" @change="${this.handleBedsChange}" tabindex="5">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
+              ${Array.from({ length: this.maxBedrooms }, (_, k) => k + 1).map(i => html `
+                    <option value="${i}">${i}</option>
+                  `)}
             </select>
           </section>
         </div>
         <section>
-          <button type="submit" tabindex="6" .style="${this.buttonCss}">Search Listings</button>
+          <button type="submit" tabindex="6" .style="${this.buttonCss}">${this.buttonText}</button>
         </section>
       </form>
     `;
@@ -181,7 +138,15 @@ let DirectSearch = class DirectSearch extends LitElement {
         if (this.selectedLocation) {
             toUrl = `${toUrl}&loc=${this.selectedLocation}`;
         }
-        window.location.href = toUrl;
+        if (this.mode === 'property') {
+            toUrl = `${this.selectedLocation}?guests=${this.numberOfGuests}&check-in=${startDatePieces[2]}-${startDatePieces[1]}-${startDatePieces[0]}&check-out=${endDatePieces[2]}-${endDatePieces[1]}-${endDatePieces[0]}`;
+        }
+        if (window.location != window.parent.location) {
+            window.parent.location.href = toUrl;
+        }
+        else {
+            window.location.href = toUrl;
+        }
     }
     pad(n) {
         return n < 10 ? '0' + n : n;
@@ -278,6 +243,9 @@ DirectSearch.styles = css `
   `;
 __decorate([
     property({ type: String, reflect: true })
+], DirectSearch.prototype, "mode", void 0);
+__decorate([
+    property({ type: String, reflect: true })
 ], DirectSearch.prototype, "url", void 0);
 __decorate([
     property({ type: Number, reflect: true })
@@ -296,10 +264,34 @@ __decorate([
 ], DirectSearch.prototype, "selectedLocation", void 0);
 __decorate([
     property({ type: Number, reflect: true })
+], DirectSearch.prototype, "maxBedrooms", void 0);
+__decorate([
+    property({ type: Number, reflect: true })
+], DirectSearch.prototype, "maxGuests", void 0);
+__decorate([
+    property({ type: Number, reflect: true })
 ], DirectSearch.prototype, "bedrooms", void 0);
 __decorate([
     property({ type: String, reflect: true })
 ], DirectSearch.prototype, "buttonCss", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], DirectSearch.prototype, "buttonText", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], DirectSearch.prototype, "labelLocation", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], DirectSearch.prototype, "labelStartDate", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], DirectSearch.prototype, "labelEndDate", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], DirectSearch.prototype, "labelGuests", void 0);
+__decorate([
+    property({ type: String, reflect: true })
+], DirectSearch.prototype, "labelBeds", void 0);
 DirectSearch = __decorate([
     customElement('direct-search')
 ], DirectSearch);

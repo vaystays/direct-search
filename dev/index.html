@@ -6,17 +6,22 @@
     <title>Direct Search Demo</title>
     <script type="module" src="../direct-search.js"></script>
     <!-- <script type="module" src="../direct-search.bundled.js"></script> -->
-    <!-- <script type="module">
-      import '@direct-software/direct-search'
-    </script> -->
-      
     </script>
   </head>
   <body>
     <direct-search
+      labelLocation="Location"
+      labelStartDate="Start Date"
+      labelEndDate="End Date"
+      labelGuests="Guests"
+      labelBeds="Bedrooms"
+      buttonText="Search"
+      maxBedrooms="10"
+      maxGuests="10"
       url="https://cxstaging.getdirect.io/listings/search"
+      mode="property"
       locations='[
-      { "name": "San Jose", "value": "25.790654,-80.1300455"},
+      { "name": "San Jose", "value": "https://cxstaging.getdirect.io/listings/abaco-cliff?guests=1&sort=default&zoom=14"},
       { "name": "Galaway", "value": "53.270668,-9.0567905"},
       { "name": "Blah", "value": "25.790654,-80.1300455"}
     ]'

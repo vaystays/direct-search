@@ -113,6 +113,10 @@ export class DirectSearch extends LitElement {
     }
   `
 
+
+  @property({ type: String, reflect: true })
+  mode='default' // default|property
+
   /**
    * The url for the white label site
    */
@@ -146,10 +150,34 @@ export class DirectSearch extends LitElement {
   selectedLocation = ''
 
   @property({ type: Number, reflect: true })
+  maxBedrooms = 10
+
+  @property({ type: Number, reflect: true })
+  maxGuests = 10
+
+  @property({ type: Number, reflect: true })
   bedrooms = 1
 
   @property({ type: String, reflect: true })
   buttonCss = ''
+
+  @property({ type: String, reflect: true })
+  buttonText = 'Search Listings'
+
+  @property({ type: String, reflect: true })
+  labelLocation = 'Location'
+
+  @property({ type: String, reflect: true })
+  labelStartDate = 'Check-In'
+
+  @property({ type: String, reflect: true })
+  labelEndDate = 'Check-Out'
+
+  @property({ type: String, reflect: true })
+  labelGuests = 'Guests'
+
+  @property({ type: String, reflect: true })
+  labelBeds = 'Beds'
 
   render() {
     return html`
@@ -157,7 +185,7 @@ export class DirectSearch extends LitElement {
         ${this.locations.length > 0
           ? html`
               <section>
-                <label for="loc">Location</label>
+                <label for="loc">${this.labelLocation}</label>
                 <select id="location" name="loc" slot="location" tabindex="1" @change="${this.handleLocationChange}">
                   <option value="">Select a Location</option>
                   ${this.locations.map(
@@ -171,85 +199,39 @@ export class DirectSearch extends LitElement {
             `
           : ``}
         <section>
-          <label for="startDate">Check-In</label>
-          <vaadin-date-picker
-            id="startDate"
-            value="${this.startDate}"
-            tabindex="2"
-            @change="${this.handleStartDateChanged}"
-          ></vaadin-date-picker>
+          <label for="startDate">${this.labelStartDate}</label>
+          <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" placeholder="${this.labelStartDate}"></vaadin-date-picker>
         </section>
         <section>
-          <label for="endDate">Check-Out</label>
-          <vaadin-date-picker
-            id="endDate"
-            value="${this.endDate}"
-            tabindex="3"
-            @change="${this.handleEndDateChanged}"
-          ></vaadin-date-picker>
+          <label for="endDate">${this.labelEndDate}</label>
+          <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" placeholder="${this.labelEndDate}"></vaadin-date-picker>
         </section>
         <div row>
           <section>
-            <label for="numberOfGuests">Guests</label>
+            <label for="numberOfGuests">${this.labelGuests}</label>
             <select name="guests" id="numberOfGuests" @change="${this.handleGuestsChange}" tabindex="4">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
+              ${Array.from({ length: this.maxGuests }, (_, k) => k + 1).map(
+                i =>
+                  html`
+                    <option value="${i}">${i}</option>
+                  `,
+              )}
             </select>
           </section>
           <section>
-            <label for="beds">Beds</label>
+            <label for="beds">${this.labelBeds}</label>
             <select name="beds" id="beds" @change="${this.handleBedsChange}" tabindex="5">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
+              ${Array.from({ length: this.maxBedrooms }, (_, k) => k + 1).map(
+                i =>
+                  html`
+                    <option value="${i}">${i}</option>
+                  `,
+              )}
             </select>
           </section>
         </div>
         <section>
-          <button type="submit" tabindex="6" .style="${this.buttonCss}">Search Listings</button>
+          <button type="submit" tabindex="6" .style="${this.buttonCss}">${this.buttonText}</button>
         </section>
       </form>
     `
@@ -292,7 +274,15 @@ export class DirectSearch extends LitElement {
       toUrl = `${toUrl}&loc=${this.selectedLocation}`
     }
 
-    window.location.href = toUrl
+    if(this.mode === 'property'){
+      toUrl = `${this.selectedLocation}?guests=${this.numberOfGuests}&check-in=${startDatePieces[2]}-${startDatePieces[1]}-${startDatePieces[0]}&check-out=${endDatePieces[2]}-${endDatePieces[1]}-${endDatePieces[0]}`
+    }
+
+    if (window.location != window.parent.location) {
+      window.parent.location.href = toUrl
+    } else {
+      window.location.href = toUrl
+    }
   }
 
   pad(n: number) {
@@ -302,6 +292,6 @@ export class DirectSearch extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'direct-search': DirectSearch
+    'direct-search': DirectSearch;
   }
 }
