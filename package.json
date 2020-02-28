@@ -1,6 +1,6 @@
 {
   "name": "@direct-software/direct-search",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Direct Softwares Search Web Component",
   "main": "direct-search.js",
   "module": "direct-search.js",
@@ -39,9 +39,12 @@
   "license": "BSD-3-Clause",
   "bundledDependencies": [
     "lit-element",
-    "@vaadin/vaadin"
+    "@vaadin/vaadin",
+    "@smarthtmlelements/smart-elements-community"
   ],
   "dependencies": {
+    "@doubletrade/lit-datepicker": "^0.2.1",
+    "@smarthtmlelements/smart-elements-community": "^6.2.0",
     "@vaadin/vaadin": "^14.1.17",
     "@vaadin/vaadin-date-picker": "^4.0.7",
     "lit-element": "^2.2.1"

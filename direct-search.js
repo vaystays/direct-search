@@ -1,16 +1,3 @@
-/**
- * @license
- * Copyright (c) 2019 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -19,11 +6,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { LitElement, html, customElement, property, css } from 'lit-element';
 import '@vaadin/vaadin-date-picker';
+import '@doubletrade/lit-datepicker';
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+console.log(today);
 /**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
+ * Direct Search Element for White Label Websites
  */
 let DirectSearch = class DirectSearch extends LitElement {
     constructor() {
@@ -40,13 +29,12 @@ let DirectSearch = class DirectSearch extends LitElement {
         /**
          * The value for the startDate.  Will default to today's date.
          */
-        this.startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`;
-        // startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`
+        this.startDate = today.getTime();
         /**
          * The vaue for the endDate.  Will default to tomorrow's date.
          */
-        this.endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`;
-        // endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
+        this.endDate = tomorrow.getTime();
+        this.showCalendar = false;
         this.locations = [];
         this.selectedLocation = '';
         this.maxBedrooms = 10;
@@ -62,12 +50,12 @@ let DirectSearch = class DirectSearch extends LitElement {
     }
     render() {
         return html `
-      <form action="${this.url}" @submit="${this.handleFormSubmit}">
+      <form action="${this.url}" @submit="${this._handleFormSubmit}">
         ${this.locations.length > 0
             ? html `
               <section>
                 <label for="loc">${this.labelLocation}</label>
-                <select id="location" name="loc" slot="location" tabindex="1" @change="${this.handleLocationChange}">
+                <select id="location" name="loc" slot="location" tabindex="1" @change="${this._handleLocationChange}">
                   <option value="">Select a Location</option>
                   ${this.locations.map(({ value, name }) => html `
                         <option .value="${value}">${name}</option>
@@ -76,18 +64,41 @@ let DirectSearch = class DirectSearch extends LitElement {
               </section>
             `
             : ``}
-        <section>
-          <label for="startDate">${this.labelStartDate}</label>
-          <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" placeholder="${this.labelStartDate}"></vaadin-date-picker>
+        <section name="calendar-container">
+          <div name="calendar-input-wrapper">
+            <label for="startDate">${this.labelStartDate}</label>
+            <input
+              name="calendar-inputs"
+              type="text"
+              .value="${this._formatDate(new Date(this.startDate))}"
+              @focus="${this._handleCalendarFocused}"
+              placeholder="Start Date"
+              readonly
+            />
+          </div>
+          <div name="calendar-input-wrapper">
+            <label for="endDate">${this.labelEndDate}</label>
+            <input
+              name="calendar-inputs"
+              type="text"
+              .value="${this._formatDate(new Date(this.endDate))}"
+              @focus="${this._handleCalendarFocused}"
+              placeholder="End Date"
+              readonly
+            />
+          </div>
         </section>
-        <section>
-          <label for="endDate">${this.labelEndDate}</label>
-          <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" placeholder="${this.labelEndDate}"></vaadin-date-picker>
+        <section @blur="${this._hideCalendar}">
+          ${this.showCalendar
+            ? html `
+                <lit-datepicker @date-from-changed="${this._handleDateFromChanged}" @date-to-changed="${this.handleDateToChanged}"></lit-datepicker>
+              `
+            : ``}
         </section>
         <div row>
           <section>
             <label for="numberOfGuests">${this.labelGuests}</label>
-            <select name="guests" id="numberOfGuests" @change="${this.handleGuestsChange}" tabindex="4">
+            <select name="guests" id="numberOfGuests" @change="${this._handleGuestsChange}" tabindex="4">
               ${Array.from({ length: this.maxGuests }, (_, k) => k + 1).map(i => html `
                     <option value="${i}">${i}</option>
                   `)}
@@ -95,29 +106,45 @@ let DirectSearch = class DirectSearch extends LitElement {
           </section>
           <section>
             <label for="beds">${this.labelBeds}</label>
-            <select name="beds" id="beds" @change="${this.handleBedsChange}" tabindex="5">
+            <select name="beds" id="beds" @change="${this._handleBedsChange}" tabindex="5">
               ${Array.from({ length: this.maxBedrooms }, (_, k) => k + 1).map(i => html `
                     <option value="${i}">${i}</option>
                   `)}
             </select>
           </section>
         </div>
+
         <section>
           <button type="submit" tabindex="6" .style="${this.buttonCss}">${this.buttonText}</button>
         </section>
       </form>
     `;
     }
-    handleLocationChange(e) {
+    _handleDateFromChanged({ detail }) {
+        if (detail.value) {
+            const date = new Date(detail.value * 1000);
+            console.log(`From changed: ${date}`);
+            this.startDate = date.getTime();
+        }
+    }
+    handleDateToChanged({ detail }) {
+        if (detail.value) {
+            const date = new Date(detail.value * 1000);
+            console.log(`To changed: ${date}`);
+            this.endDate = date.getTime();
+            this._hideCalendar();
+        }
+    }
+    _handleLocationChange(e) {
         this.selectedLocation = e.currentTarget.value;
     }
-    handleGuestsChange(e) {
+    _handleGuestsChange(e) {
         this.numberOfGuests = e.currentTarget.value;
     }
-    handleBedsChange(e) {
+    _handleBedsChange(e) {
         this.bedrooms = e.currentTarget.value;
     }
-    handleStartDateChanged(e) {
+    _handleStartDateChanged(e) {
         var _a;
         this.startDate = e.currentTarget.value;
         const endDateElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.getElementById('endDate');
@@ -127,19 +154,19 @@ let DirectSearch = class DirectSearch extends LitElement {
             endDateElement.open();
         }
     }
-    handleEndDateChanged(e) {
+    _handleEndDateChanged(e) {
         this.endDate = e.currentTarget.value;
     }
-    handleFormSubmit(e) {
+    _handleFormSubmit(e) {
         e.preventDefault();
-        const startDatePieces = this.startDate.toString().split('-');
-        const endDatePieces = this.endDate.toString().split('-');
-        let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${startDatePieces[2]}-${startDatePieces[1]}-${startDatePieces[0]}&check-out=${endDatePieces[2]}-${endDatePieces[1]}-${endDatePieces[0]}`;
+        const startDatePieces = new Date(this.startDate);
+        const endDatePieces = new Date(this.endDate);
+        let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${this._formatDateForApi(startDatePieces)}&check-out=${this._formatDateForApi(endDatePieces)}`;
         if (this.selectedLocation) {
             toUrl = `${toUrl}&loc=${this.selectedLocation}`;
         }
         if (this.mode === 'property') {
-            toUrl = `${this.selectedLocation}?guests=${this.numberOfGuests}&check-in=${startDatePieces[2]}-${startDatePieces[1]}-${startDatePieces[0]}&check-out=${endDatePieces[2]}-${endDatePieces[1]}-${endDatePieces[0]}`;
+            toUrl = `${this.selectedLocation}?guests=${this.numberOfGuests}&check-in=${this._formatDateForApi(startDatePieces)}&check-out=${this._formatDateForApi(endDatePieces)}`;
         }
         if (window.location != window.parent.location) {
             window.parent.location.href = toUrl;
@@ -150,6 +177,21 @@ let DirectSearch = class DirectSearch extends LitElement {
     }
     pad(n) {
         return n < 10 ? '0' + n : n;
+    }
+    _hideCalendar() {
+        this.showCalendar = false;
+    }
+    _showCalendar() {
+        this.showCalendar = true;
+    }
+    _handleCalendarFocused() {
+        this.showCalendar = true;
+    }
+    _formatDateForApi(date) {
+        return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${date.getDate()}`;
+    }
+    _formatDate(date) {
+        return `${this.pad(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`;
     }
 };
 DirectSearch.styles = css `
@@ -182,7 +224,8 @@ DirectSearch.styles = css `
 
     input,
     select,
-    option {
+    option,
+    [name='calendar-inputs'] {
       display: block;
       border: 1px solid #cdd3d5;
       border-radius: 0.5em;
@@ -240,6 +283,29 @@ DirectSearch.styles = css `
     [row] section:first-child {
       margin-right: 16px;
     }
+
+    lit-datepicker {
+      background: white;
+    }
+
+    [name='calendar-inputs'] {
+      display: inline-block;
+    }
+
+    [name='calendar-input-wrapper'] {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    [name='calendar-input-wrapper']:first-child {
+      margin-right: 16px;
+    }
+
+    [name='calendar-container'] {
+      display: flex;
+      flex-direction: row;
+    }
   `;
 __decorate([
     property({ type: String, reflect: true })
@@ -251,11 +317,14 @@ __decorate([
     property({ type: Number, reflect: true })
 ], DirectSearch.prototype, "numberOfGuests", void 0);
 __decorate([
-    property({ type: String, reflect: true })
+    property({ type: Number, reflect: true })
 ], DirectSearch.prototype, "startDate", void 0);
 __decorate([
-    property({ type: String, reflect: true })
+    property({ type: Number, reflect: true })
 ], DirectSearch.prototype, "endDate", void 0);
+__decorate([
+    property({ type: Boolean, reflect: true })
+], DirectSearch.prototype, "showCalendar", void 0);
 __decorate([
     property({ type: Array })
 ], DirectSearch.prototype, "locations", void 0);

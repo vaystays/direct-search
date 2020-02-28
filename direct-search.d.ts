@@ -1,23 +1,8 @@
-/**
- * @license
- * Copyright (c) 2019 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
 import { LitElement } from 'lit-element';
 import '@vaadin/vaadin-date-picker';
+import '@doubletrade/lit-datepicker';
 /**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
+ * Direct Search Element for White Label Websites
  */
 export declare class DirectSearch extends LitElement {
     static styles: import("lit-element").CSSResult;
@@ -33,11 +18,12 @@ export declare class DirectSearch extends LitElement {
     /**
      * The value for the startDate.  Will default to today's date.
      */
-    startDate: string;
+    startDate: number;
     /**
      * The vaue for the endDate.  Will default to tomorrow's date.
      */
-    endDate: string;
+    endDate: number;
+    showCalendar: boolean;
     locations: never[];
     selectedLocation: string;
     maxBedrooms: number;
@@ -51,13 +37,24 @@ export declare class DirectSearch extends LitElement {
     labelGuests: string;
     labelBeds: string;
     render(): import("lit-element").TemplateResult;
-    handleLocationChange(e: any): void;
-    handleGuestsChange(e: any): void;
-    handleBedsChange(e: any): void;
-    handleStartDateChanged(e: any): void;
-    handleEndDateChanged(e: any): void;
-    handleFormSubmit(e: any): void;
+    _handleDateFromChanged({ detail }: {
+        detail: any;
+    }): void;
+    handleDateToChanged({ detail }: {
+        detail: any;
+    }): void;
+    _handleLocationChange(e: any): void;
+    _handleGuestsChange(e: any): void;
+    _handleBedsChange(e: any): void;
+    _handleStartDateChanged(e: any): void;
+    _handleEndDateChanged(e: any): void;
+    _handleFormSubmit(e: any): void;
     pad(n: number): string | number;
+    _hideCalendar(): void;
+    _showCalendar(): void;
+    _handleCalendarFocused(): void;
+    _formatDateForApi(date: any): string;
+    _formatDate(date: any): string;
 }
 declare global {
     interface HTMLElementTagNameMap {

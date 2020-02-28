@@ -1,25 +1,15 @@
-/**
- * @license
- * Copyright (c) 2019 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
-
 import { LitElement, html, customElement, property, css } from 'lit-element'
 import '@vaadin/vaadin-date-picker'
+import '@doubletrade/lit-datepicker'
+
+const today = new Date()
+const tomorrow = new Date(today)
+tomorrow.setDate(tomorrow.getDate() + 1)
+
+console.log(today)
 
 /**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
+ * Direct Search Element for White Label Websites
  */
 @customElement('direct-search')
 export class DirectSearch extends LitElement {
@@ -53,7 +43,8 @@ export class DirectSearch extends LitElement {
 
     input,
     select,
-    option {
+    option,
+    [name='calendar-inputs'] {
       display: block;
       border: 1px solid #cdd3d5;
       border-radius: 0.5em;
@@ -111,11 +102,33 @@ export class DirectSearch extends LitElement {
     [row] section:first-child {
       margin-right: 16px;
     }
+
+    lit-datepicker {
+      background: white;
+    }
+
+    [name='calendar-inputs'] {
+      display: inline-block;
+    }
+
+    [name='calendar-input-wrapper'] {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    [name='calendar-input-wrapper']:first-child {
+      margin-right: 16px;
+    }
+
+    [name='calendar-container'] {
+      display: flex;
+      flex-direction: row;
+    }
   `
 
-
   @property({ type: String, reflect: true })
-  mode='default' // default|property
+  mode = 'default' // default|property
 
   /**
    * The url for the white label site
@@ -132,16 +145,17 @@ export class DirectSearch extends LitElement {
   /**
    * The value for the startDate.  Will default to today's date.
    */
-  @property({ type: String, reflect: true })
-  startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`
-  // startDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate()}`
+  @property({ type: Number, reflect: true })
+  startDate = today.getTime()
 
   /**
    * The vaue for the endDate.  Will default to tomorrow's date.
    */
-  @property({ type: String, reflect: true })
-  endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
-  // endDate = `${new Date().getFullYear()}-${this.pad(new Date().getMonth() + 1)}-${new Date().getDate() + 1}`
+  @property({ type: Number, reflect: true })
+  endDate = tomorrow.getTime()
+
+  @property({ type: Boolean, reflect: true })
+  showCalendar = false
 
   @property({ type: Array })
   locations = []
@@ -181,12 +195,12 @@ export class DirectSearch extends LitElement {
 
   render() {
     return html`
-      <form action="${this.url}" @submit="${this.handleFormSubmit}">
+      <form action="${this.url}" @submit="${this._handleFormSubmit}">
         ${this.locations.length > 0
           ? html`
               <section>
                 <label for="loc">${this.labelLocation}</label>
-                <select id="location" name="loc" slot="location" tabindex="1" @change="${this.handleLocationChange}">
+                <select id="location" name="loc" slot="location" tabindex="1" @change="${this._handleLocationChange}">
                   <option value="">Select a Location</option>
                   ${this.locations.map(
                     ({ value, name }) =>
@@ -198,18 +212,41 @@ export class DirectSearch extends LitElement {
               </section>
             `
           : ``}
-        <section>
-          <label for="startDate">${this.labelStartDate}</label>
-          <vaadin-date-picker id="startDate" value="${this.startDate}" tabindex="2" @change="${this.handleStartDateChanged}" placeholder="${this.labelStartDate}"></vaadin-date-picker>
+        <section name="calendar-container">
+          <div name="calendar-input-wrapper">
+            <label for="startDate">${this.labelStartDate}</label>
+            <input
+              name="calendar-inputs"
+              type="text"
+              .value="${this._formatDate(new Date(this.startDate))}"
+              @focus="${this._handleCalendarFocused}"
+              placeholder="Start Date"
+              readonly
+            />
+          </div>
+          <div name="calendar-input-wrapper">
+            <label for="endDate">${this.labelEndDate}</label>
+            <input
+              name="calendar-inputs"
+              type="text"
+              .value="${this._formatDate(new Date(this.endDate))}"
+              @focus="${this._handleCalendarFocused}"
+              placeholder="End Date"
+              readonly
+            />
+          </div>
         </section>
-        <section>
-          <label for="endDate">${this.labelEndDate}</label>
-          <vaadin-date-picker id="endDate" value="${this.endDate}" tabindex="3" @change="${this.handleEndDateChanged}" placeholder="${this.labelEndDate}"></vaadin-date-picker>
+        <section @blur="${this._hideCalendar}">
+          ${this.showCalendar
+            ? html`
+                <lit-datepicker @date-from-changed="${this._handleDateFromChanged}" @date-to-changed="${this.handleDateToChanged}"></lit-datepicker>
+              `
+            : ``}
         </section>
         <div row>
           <section>
             <label for="numberOfGuests">${this.labelGuests}</label>
-            <select name="guests" id="numberOfGuests" @change="${this.handleGuestsChange}" tabindex="4">
+            <select name="guests" id="numberOfGuests" @change="${this._handleGuestsChange}" tabindex="4">
               ${Array.from({ length: this.maxGuests }, (_, k) => k + 1).map(
                 i =>
                   html`
@@ -220,7 +257,7 @@ export class DirectSearch extends LitElement {
           </section>
           <section>
             <label for="beds">${this.labelBeds}</label>
-            <select name="beds" id="beds" @change="${this.handleBedsChange}" tabindex="5">
+            <select name="beds" id="beds" @change="${this._handleBedsChange}" tabindex="5">
               ${Array.from({ length: this.maxBedrooms }, (_, k) => k + 1).map(
                 i =>
                   html`
@@ -230,6 +267,7 @@ export class DirectSearch extends LitElement {
             </select>
           </section>
         </div>
+
         <section>
           <button type="submit" tabindex="6" .style="${this.buttonCss}">${this.buttonText}</button>
         </section>
@@ -237,19 +275,36 @@ export class DirectSearch extends LitElement {
     `
   }
 
-  handleLocationChange(e) {
+  _handleDateFromChanged({ detail }) {
+    if (detail.value) {
+      const date = new Date(detail.value * 1000)
+      console.log(`From changed: ${date}`)
+      this.startDate = date.getTime()
+    }
+  }
+
+  handleDateToChanged({ detail }) {
+    if (detail.value) {
+      const date = new Date(detail.value * 1000)
+      console.log(`To changed: ${date}`)
+      this.endDate = date.getTime()
+      this._hideCalendar()
+    }
+  }
+
+  _handleLocationChange(e) {
     this.selectedLocation = e.currentTarget.value
   }
 
-  handleGuestsChange(e) {
+  _handleGuestsChange(e) {
     this.numberOfGuests = e.currentTarget.value
   }
 
-  handleBedsChange(e) {
+  _handleBedsChange(e) {
     this.bedrooms = e.currentTarget.value
   }
 
-  handleStartDateChanged(e) {
+  _handleStartDateChanged(e) {
     this.startDate = e.currentTarget.value
     const endDateElement = this.shadowRoot?.getElementById('endDate')
     endDateElement.min = e.currentTarget.value
@@ -258,24 +313,28 @@ export class DirectSearch extends LitElement {
       endDateElement.open()
     }
   }
-  handleEndDateChanged(e) {
+  _handleEndDateChanged(e) {
     this.endDate = e.currentTarget.value
   }
 
-  handleFormSubmit(e) {
+  _handleFormSubmit(e) {
     e.preventDefault()
 
-    const startDatePieces = this.startDate.toString().split('-')
-    const endDatePieces = this.endDate.toString().split('-')
+    const startDatePieces = new Date(this.startDate)
+    const endDatePieces = new Date(this.endDate)
 
-    let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${startDatePieces[2]}-${startDatePieces[1]}-${startDatePieces[0]}&check-out=${endDatePieces[2]}-${endDatePieces[1]}-${endDatePieces[0]}`
+    let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${this._formatDateForApi(startDatePieces)}&check-out=${this._formatDateForApi(
+      endDatePieces,
+    )}`
 
     if (this.selectedLocation) {
       toUrl = `${toUrl}&loc=${this.selectedLocation}`
     }
 
-    if(this.mode === 'property'){
-      toUrl = `${this.selectedLocation}?guests=${this.numberOfGuests}&check-in=${startDatePieces[2]}-${startDatePieces[1]}-${startDatePieces[0]}&check-out=${endDatePieces[2]}-${endDatePieces[1]}-${endDatePieces[0]}`
+    if (this.mode === 'property') {
+      toUrl = `${this.selectedLocation}?guests=${this.numberOfGuests}&check-in=${this._formatDateForApi(startDatePieces)}&check-out=${this._formatDateForApi(
+        endDatePieces,
+      )}`
     }
 
     if (window.location != window.parent.location) {
@@ -288,10 +347,30 @@ export class DirectSearch extends LitElement {
   pad(n: number) {
     return n < 10 ? '0' + n : n
   }
+
+  _hideCalendar() {
+    this.showCalendar = false
+  }
+
+  _showCalendar() {
+    this.showCalendar = true
+  }
+
+  _handleCalendarFocused() {
+    this.showCalendar = true
+  }
+
+  _formatDateForApi(date) {
+    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${date.getDate()}`
+  }
+
+  _formatDate(date) {
+    return `${this.pad(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`
+  }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'direct-search': DirectSearch;
+    'direct-search': DirectSearch
   }
 }
