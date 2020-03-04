@@ -6,8 +6,6 @@ const today = new Date()
 const tomorrow = new Date(today)
 tomorrow.setDate(tomorrow.getDate() + 1)
 
-console.log(today)
-
 /**
  * Direct Search Element for White Label Websites
  */
@@ -117,13 +115,18 @@ export class DirectSearch extends LitElement {
       flex: 1;
     }
 
-    [name='calendar-input-wrapper']:first-child {
+    /* [name='calendar-input-wrapper']:first-child {
       margin-right: 16px;
-    }
+    } */
 
     [name='calendar-container'] {
       display: flex;
       flex-direction: row;
+    }
+
+    [name='arrow'] {
+      padding: 8px;
+      padding-top: 28px;
     }
   `
 
@@ -196,47 +199,54 @@ export class DirectSearch extends LitElement {
   render() {
     return html`
       <form action="${this.url}" @submit="${this._handleFormSubmit}">
-        ${this.locations.length > 0
-          ? html`
-              <section>
-                <label for="loc">${this.labelLocation}</label>
-                <select id="location" name="loc" slot="location" tabindex="1" @change="${this._handleLocationChange}">
-                  <option value="">Select a Location</option>
-                  ${this.locations.map(
-                    ({ value, name }) =>
-                      html`
-                        <option .value="${value}">${name}</option>
-                      `,
-                  )}
-                </select>
-              </section>
-            `
-          : ``}
-        <section name="calendar-container">
-          <div name="calendar-input-wrapper">
-            <label for="startDate">${this.labelStartDate}</label>
-            <input
-              name="calendar-inputs"
-              type="text"
-              .value="${this._formatDate(new Date(this.startDate))}"
-              @focus="${this._handleCalendarFocused}"
-              placeholder="Start Date"
-              readonly
-            />
-          </div>
-          <div name="calendar-input-wrapper">
-            <label for="endDate">${this.labelEndDate}</label>
-            <input
-              name="calendar-inputs"
-              type="text"
-              .value="${this._formatDate(new Date(this.endDate))}"
-              @focus="${this._handleCalendarFocused}"
-              placeholder="End Date"
-              readonly
-            />
-          </div>
-        </section>
-        <section @blur="${this._hideCalendar}">
+        <div row>
+          ${this.locations.length > 0
+            ? html`
+                <section>
+                  <label for="loc">${this.labelLocation}</label>
+                  <select id="location" name="loc" slot="location" tabindex="1" @change="${this._handleLocationChange}">
+                    <option value="">Select a Location</option>
+                    ${this.locations.map(
+                      ({ value, name }) =>
+                        html`
+                          <option .value="${value}">${name}</option>
+                        `,
+                    )}
+                  </select>
+                </section>
+              `
+            : ``}
+          <section name="calendar-container">
+            <div name="calendar-input-wrapper">
+              <label for="startDate">${this.labelStartDate}</label>
+              <input
+                name="calendar-inputs"
+                type="text"
+                .value="${this._formatDate(new Date(this.startDate))}"
+                @focus="${this._handleCalendarFocused}"
+                placeholder="Start Date"
+                readonly
+              />
+            </div>
+            <div name="arrow">
+              <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" />
+              </svg>
+            </div>
+            <div name="calendar-input-wrapper">
+              <label for="endDate">${this.labelEndDate}</label>
+              <input
+                name="calendar-inputs"
+                type="text"
+                .value="${this._formatDate(new Date(this.endDate))}"
+                @focus="${this._handleCalendarFocused}"
+                placeholder="End Date"
+                readonly
+              />
+            </div>
+          </section>
+        </div>
+        <section @blur="${this._hideCalendar}" style="width: 95%; display: flex; position: absolute;">
           ${this.showCalendar
             ? html`
                 <lit-datepicker @date-from-changed="${this._handleDateFromChanged}" @date-to-changed="${this.handleDateToChanged}"></lit-datepicker>
