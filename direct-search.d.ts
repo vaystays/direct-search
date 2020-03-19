@@ -36,11 +36,13 @@ export declare class DirectSearch extends LitElement {
     labelEndDate: string;
     labelGuests: string;
     labelBeds: string;
+    showStartText: boolean;
+    showEndText: boolean;
     render(): import("lit-element").TemplateResult;
     _handleDateFromChanged({ detail }: {
         detail: any;
     }): void;
-    handleDateToChanged({ detail }: {
+    _handleDateToChanged({ detail }: {
         detail: any;
     }): void;
     _handleLocationChange(e: any): void;

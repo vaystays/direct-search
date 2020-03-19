@@ -1,7 +1,7 @@
 {
   "name": "@direct-software/direct-search",
-  "version": "0.1.12",
-  "description": "Direct Softwares Search Web Component",
+  "version": "0.1.14",
+  "description": "Direct Software's Search Web Component",
   "main": "direct-search.js",
   "module": "direct-search.js",
   "private": false,

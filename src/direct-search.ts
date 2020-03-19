@@ -42,7 +42,7 @@ export class DirectSearch extends LitElement {
     input,
     select,
     option,
-    [name='calendar-inputs'] {
+    [name='input-wrapper'] {
       display: block;
       border: 1px solid #cdd3d5;
       border-radius: 0.5em;
@@ -103,10 +103,7 @@ export class DirectSearch extends LitElement {
 
     lit-datepicker {
       background: white;
-    }
-
-    [name='calendar-inputs'] {
-      display: inline-block;
+      box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
     }
 
     [name='calendar-input-wrapper'] {
@@ -121,12 +118,46 @@ export class DirectSearch extends LitElement {
 
     [name='calendar-container'] {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
     }
 
     [name='arrow'] {
-      padding: 8px;
-      padding-top: 28px;
+      margin-top: -2px;
+      padding: 16px;
+      padding-top: 0;
+
+      z-index: 1001;
+    }
+
+    [name='input-wrapper'] {
+      display: flex;
+      flex-direction: row;
+      height: 20px;
+    }
+
+    [name='input-wrapper'] input {
+      border: 0px;
+      padding: 0px;
+      flex: 1;
+      min-width: 75px;
+    }
+
+    [name='input-wrapper'] input:focus {
+      outline: none;
+    }
+    .calendar-labels {
+      position: absolute;
+      z-index: 1000;
+      background: white;
+      width: 15%;
+      min-width: 90px;
+
+      height: 20px;
+    }
+
+    [name='endDate'] {
+      margin-left: 40%;
+      padding-left: 32px;
     }
   `
 
@@ -196,13 +227,19 @@ export class DirectSearch extends LitElement {
   @property({ type: String, reflect: true })
   labelBeds = 'Beds'
 
+  @property({ type: Boolean })
+  showStartText = true
+
+  @property({ type: Boolean })
+  showEndText = true
+
   render() {
     return html`
       <form action="${this.url}" @submit="${this._handleFormSubmit}">
-        <div row>
+        <div>
           ${this.locations.length > 0
             ? html`
-                <section>
+                <section style="flex: 4">
                   <label for="loc">${this.labelLocation}</label>
                   <select id="location" name="loc" slot="location" tabindex="1" @change="${this._handleLocationChange}">
                     <option value="">Select a Location</option>
@@ -216,40 +253,38 @@ export class DirectSearch extends LitElement {
                 </section>
               `
             : ``}
+        </div>
+        <div>
           <section name="calendar-container">
-            <div name="calendar-input-wrapper">
-              <label for="startDate">${this.labelStartDate}</label>
-              <input
-                name="calendar-inputs"
-                type="text"
-                .value="${this._formatDate(new Date(this.startDate))}"
-                @focus="${this._handleCalendarFocused}"
-                placeholder="Start Date"
-                readonly
-              />
-            </div>
-            <div name="arrow">
-              <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
-                <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" />
-              </svg>
-            </div>
-            <div name="calendar-input-wrapper">
-              <label for="endDate">${this.labelEndDate}</label>
-              <input
-                name="calendar-inputs"
-                type="text"
-                .value="${this._formatDate(new Date(this.endDate))}"
-                @focus="${this._handleCalendarFocused}"
-                placeholder="End Date"
-                readonly
-              />
+            <label for="startDate">${this.labelStartDate}</label>
+
+            <div name="input-wrapper" @click="${this._handleCalendarFocused}">
+              ${this.showStartText
+                ? html`
+                    <div style="flex: 1; text-align: center;">Start</div>
+                  `
+                : html`
+                    <div>${this._formatDate(new Date(this.startDate))}</div>
+                  `}
+              <div name="arrow">
+                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                  <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" />
+                </svg>
+              </div>
+              ${this.showEndText
+                ? html`
+                    <div style="flex: 1; text-align: center;">End</div>
+                  `
+                : html`
+                    <div>${this._formatDate(new Date(this.endDate))}</div>
+                  `}
             </div>
           </section>
         </div>
         <section @blur="${this._hideCalendar}" style="width: 95%; display: flex; position: absolute;">
           ${this.showCalendar
             ? html`
-                <lit-datepicker @date-from-changed="${this._handleDateFromChanged}" @date-to-changed="${this.handleDateToChanged}"></lit-datepicker>
+                <lit-datepicker @date-from-changed="${this._handleDateFromChanged}" @date-to-changed="${this._handleDateToChanged}"></lit-datepicker>
               `
             : ``}
         </section>
@@ -286,18 +321,22 @@ export class DirectSearch extends LitElement {
   }
 
   _handleDateFromChanged({ detail }) {
+    console.log(detail, 'from')
     if (detail.value) {
       const date = new Date(detail.value * 1000)
       console.log(`From changed: ${date}`)
       this.startDate = date.getTime()
+      this.showStartText = false
     }
   }
 
-  handleDateToChanged({ detail }) {
+  _handleDateToChanged({ detail }) {
+    console.log(detail, 'to')
     if (detail.value) {
       const date = new Date(detail.value * 1000)
       console.log(`To changed: ${date}`)
       this.endDate = date.getTime()
+      this.showEndText = false
       this._hideCalendar()
     }
   }
