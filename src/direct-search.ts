@@ -417,7 +417,7 @@ export class DirectSearch extends LitElement {
   }
 
   _formatDateForApi(date) {
-    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}`
+    return `${this.pad(date.getDate())}-${this.pad(date.getMonth() + 1)}-${date.getFullYear()}`
   }
 
   _formatDate(date) {
