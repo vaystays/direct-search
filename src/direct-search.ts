@@ -374,6 +374,8 @@ export class DirectSearch extends LitElement {
   _handleFormSubmit(e) {
     e.preventDefault()
 
+    debugger
+
     const startDatePieces = new Date(this.startDate)
     const endDatePieces = new Date(this.endDate)
 
@@ -415,7 +417,7 @@ export class DirectSearch extends LitElement {
   }
 
   _formatDateForApi(date) {
-    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${date.getDate()}`
+    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}`
   }
 
   _formatDate(date) {

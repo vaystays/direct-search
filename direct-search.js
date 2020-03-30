@@ -174,6 +174,7 @@ let DirectSearch = class DirectSearch extends LitElement {
     }
     _handleFormSubmit(e) {
         e.preventDefault();
+        debugger;
         const startDatePieces = new Date(this.startDate);
         const endDatePieces = new Date(this.endDate);
         let toUrl = `${this.url}?guests=${this.numberOfGuests}&check-in=${this._formatDateForApi(startDatePieces)}&check-out=${this._formatDateForApi(endDatePieces)}`;
@@ -203,7 +204,7 @@ let DirectSearch = class DirectSearch extends LitElement {
         this.showCalendar = true;
     }
     _formatDateForApi(date) {
-        return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${date.getDate()}`;
+        return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}`;
     }
     _formatDate(date) {
         return `${this.pad(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`;
