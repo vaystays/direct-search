@@ -97,7 +97,12 @@ let DirectSearch = class DirectSearch extends LitElement {
         <section @blur="${this._hideCalendar}" style="width: 95%; display: flex; position: absolute;">
           ${this.showCalendar
             ? html `
-                <lit-datepicker @date-from-changed="${this._handleDateFromChanged}" @date-to-changed="${this._handleDateToChanged}"></lit-datepicker>
+                <lit-datepicker
+                  @date-from-changed="${this._handleDateFromChanged}"
+                  @date-to-changed="${this._handleDateToChanged}"
+                  force-narrow
+                  narrow
+                ></lit-datepicker>
               `
             : ``}
         </section>
